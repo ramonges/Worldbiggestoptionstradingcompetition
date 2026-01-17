@@ -409,6 +409,20 @@ const AuthModal = ({ open, mode, onClose, onModeChange, onSuccess }) => {
         });
         if (error) throw error;
         if (data.session) {
+          const profile = {
+            id: data.user.id,
+            first_name: formData.get("first_name"),
+            last_name: formData.get("last_name"),
+            university: formData.get("university"),
+            major: formData.get("major"),
+            graduation_year: Number(formData.get("graduation_year")),
+            phone: formData.get("phone") || null,
+            accept_terms: formData.get("accept_terms") === "on",
+            accept_rules: formData.get("accept_rules") === "on",
+            accept_updates: formData.get("accept_updates") === "on",
+            updated_at: new Date().toISOString(),
+          };
+          await supabase.from("profiles").upsert(profile);
           onSuccess();
         } else {
           setMessage("Account created. You can now log in.");
@@ -422,7 +436,13 @@ const AuthModal = ({ open, mode, onClose, onModeChange, onSuccess }) => {
         onSuccess();
       }
     } catch (error) {
-      setMessage(error.message);
+      if (error.message?.toLowerCase().includes("email not confirmed")) {
+        setMessage(
+          "Your account was created before email confirmation was disabled. Please confirm it once in Supabase → Auth → Users, then log in again."
+        );
+      } else {
+        setMessage(error.message);
+      }
     } finally {
       setLoading(false);
     }
