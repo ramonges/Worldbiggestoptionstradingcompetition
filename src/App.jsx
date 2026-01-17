@@ -749,53 +749,56 @@ const Platform = ({ onLogout }) => {
 
   return (
     <div className={dark ? "dark" : ""}>
-      <div className="flex min-h-screen bg-slate-50 text-slate-900 dark:bg-[#1a1a1a] dark:text-white">
+      <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100 text-slate-900 dark:from-[#0b0f14] dark:via-[#0b0f14] dark:to-[#0e1218] dark:text-white">
         <aside
-          className={`flex flex-col gap-3 bg-slate-900 px-3 py-6 text-white transition-all duration-200 ${
+          className={`flex flex-col gap-2 bg-[#0f172a] px-3 py-6 text-white shadow-lg transition-all duration-200 ${
             sidebarOpen ? "w-64" : "w-20"
           }`}
         >
           <button
-            className="rounded-lg px-3 py-2 text-xs text-white/70 hover:text-white"
+            className="mb-2 flex items-center justify-center rounded-lg px-3 py-2 text-xs text-white/70 hover:text-white"
             onClick={() => setSidebarOpen((prev) => !prev)}
           >
             {sidebarOpen ? "Collapse" : "Menu"}
           </button>
           {[
-            { id: "overview", label: "📊 Overview" },
-            { id: "market", label: "📈 Market" },
-            { id: "positions", label: "💼 My Positions" },
-            { id: "payoff", label: "📉 Option Payoff Graphs" },
-            { id: "montecarlo", label: "🎲 Monte Carlo Pricer" },
+            { id: "overview", label: "Overview", icon: "📊" },
+            { id: "market", label: "Market", icon: "📈" },
+            { id: "positions", label: "My Positions", icon: "💼" },
+            { id: "payoff", label: "Option Payoff Graphs", icon: "📉" },
+            { id: "montecarlo", label: "Monte Carlo Pricer", icon: "🎲" },
           ].map((item) => (
             <button
               key={item.id}
               onClick={() => setActive(item.id)}
-              className={`rounded-xl px-3 py-2 text-left text-xs font-semibold ${
+              className={`flex items-center gap-3 rounded-xl px-3 py-2 text-left text-xs font-semibold ${
                 active === item.id ? "bg-white/15" : "hover:bg-white/10"
               }`}
             >
-              {item.label}
+              <span className="text-base">{item.icon}</span>
+              <span className={sidebarOpen ? "block" : "hidden"}>{item.label}</span>
             </button>
           ))}
-          <div className="mt-auto space-y-2">
+          <div className="mt-auto space-y-2 pt-4">
             <button
               onClick={() => setActive("profile")}
-              className="w-full rounded-xl px-3 py-2 text-left text-xs font-semibold hover:bg-white/10"
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs font-semibold hover:bg-white/10"
             >
-              👤 My Profile
+              <span className="text-base">👤</span>
+              <span className={sidebarOpen ? "block" : "hidden"}>My Profile</span>
             </button>
             <button
               onClick={onLogout}
-              className="w-full rounded-xl px-3 py-2 text-left text-xs font-semibold hover:bg-white/10"
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs font-semibold hover:bg-white/10"
             >
-              🚪 Log Out
+              <span className="text-base">🚪</span>
+              <span className={sidebarOpen ? "block" : "hidden"}>Log Out</span>
             </button>
           </div>
         </aside>
 
         <div className="flex flex-1 flex-col">
-          <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-8 py-5 dark:border-slate-800 dark:bg-[#111]">
+          <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white/90 px-8 py-5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-[#0f172a]/70">
             <HeaderLogo />
             <div className="flex items-center gap-4 text-xs text-slate-500">
               <span>
@@ -816,7 +819,7 @@ const Platform = ({ onLogout }) => {
                 <option value="dark">Dark</option>
               </select>
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-columbia text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-columbia text-white shadow">
                   {profile?.first_name?.[0] || "S"}
                 </div>
                 <span>{profile?.first_name || "Student"}</span>
@@ -853,7 +856,7 @@ const Platform = ({ onLogout }) => {
                   ].map((item) => (
                     <div
                       key={item.label}
-                      className="rounded-2xl border border-slate-200 bg-white p-4 text-xs dark:border-slate-800 dark:bg-[#111]"
+                      className="rounded-2xl border border-slate-200 bg-white p-4 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]"
                     >
                       <div className="text-slate-500">{item.label}</div>
                       <div className="mt-2 text-base font-semibold">{item.value}</div>
@@ -866,9 +869,9 @@ const Platform = ({ onLogout }) => {
                   ))}
                 </div>
                 <div className="grid gap-6 lg:grid-cols-2">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs dark:border-slate-800 dark:bg-[#111]">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                     <h3 className="text-sm font-semibold">Performance Chart</h3>
-                    <div className="mt-4 h-40 rounded-xl bg-slate-100 p-4 dark:bg-slate-800">
+                    <div className="mt-4 h-40 rounded-xl bg-slate-100 p-4 dark:bg-slate-900">
                       <svg viewBox="0 0 300 120" className="h-full w-full text-columbia">
                         <polyline
                           fill="none"
@@ -879,7 +882,7 @@ const Platform = ({ onLogout }) => {
                       </svg>
                     </div>
                   </div>
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs dark:border-slate-800 dark:bg-[#111]">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                     <h3 className="text-sm font-semibold">Leaderboard Preview</h3>
                     <p className="mt-3 text-xs text-slate-500">
                       Your Current Rank: #42 / 523 participants
@@ -891,7 +894,7 @@ const Platform = ({ onLogout }) => {
                     </ul>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs dark:border-slate-800 dark:bg-[#111]">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                   <h3 className="text-sm font-semibold">Recent Activity</h3>
                   <ul className="mt-4 space-y-3 text-xs text-slate-500">
                     <li>Bought 2x SPY CALL 450 (Feb 16) at $2.82</li>
@@ -929,10 +932,10 @@ const Platform = ({ onLogout }) => {
                     <button
                       key={asset.symbol}
                       onClick={() => setSelectedSymbol(asset.symbol)}
-                      className={`rounded-2xl border p-4 text-left text-xs ${
+                      className={`rounded-2xl border p-4 text-left text-xs shadow-sm ${
                         selectedSymbol === asset.symbol
                           ? "border-columbia bg-columbia/10"
-                          : "border-slate-200 bg-white"
+                          : "border-slate-200 bg-white dark:border-slate-800 dark:bg-[#111827]"
                       }`}
                     >
                       <div className="text-sm font-semibold">{asset.symbol}</div>
@@ -946,7 +949,7 @@ const Platform = ({ onLogout }) => {
                     </button>
                   ))}
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs dark:border-slate-800 dark:bg-[#111]">
+                <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                   <div className="flex flex-wrap items-center gap-4">
                     <div className="text-sm font-semibold">{selectedSymbol}</div>
                     <div className="text-xs text-slate-500">
@@ -957,7 +960,7 @@ const Platform = ({ onLogout }) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-3 overflow-auto rounded-2xl bg-white p-3 text-xs">
+                <div className="flex gap-3 overflow-auto rounded-2xl bg-white p-3 text-xs shadow-sm dark:bg-[#111827]">
                   {maturities.map((date) => (
                     <button
                       key={date}
@@ -965,7 +968,7 @@ const Platform = ({ onLogout }) => {
                       className={`rounded-xl px-4 py-2 ${
                         maturity === date
                           ? "bg-columbia text-white"
-                          : "border border-slate-200 text-slate-600"
+                          : "border border-slate-200 text-slate-600 dark:border-slate-700"
                       }`}
                     >
                       {date}
@@ -979,7 +982,7 @@ const Platform = ({ onLogout }) => {
                     onBuy={(row) => setOrderModal(row)}
                     atmStrike={atmStrike}
                   />
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                     <div className="mb-2 text-xs font-semibold text-slate-500">
                       STRIKE
                     </div>
@@ -1019,7 +1022,7 @@ const Platform = ({ onLogout }) => {
                   />
                   <SummaryCard label="Total P&L" value="$5,234.56" />
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs">
+                <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                   <table className="w-full text-left text-xs">
                     <thead className="text-[11px] text-slate-400">
                       <tr>
@@ -1062,7 +1065,7 @@ const Platform = ({ onLogout }) => {
 
             {active === "payoff" && (
               <section className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                   <h3 className="text-sm font-semibold">Strategy Builder</h3>
                   <div className="mt-4 space-y-4">
                     <input
@@ -1113,20 +1116,20 @@ const Platform = ({ onLogout }) => {
                     </button>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                   <h3 className="text-sm font-semibold">Payoff Diagram</h3>
-                  <div className="mt-4 h-56 rounded-xl bg-slate-100" />
+                  <div className="mt-4 h-56 rounded-xl bg-slate-100 dark:bg-slate-900" />
                   <div className="mt-4 grid gap-3 md:grid-cols-2">
-                    <div className="rounded-xl bg-slate-50 p-3 text-xs">
+                    <div className="rounded-xl bg-slate-50 p-3 text-xs dark:bg-slate-900">
                       Max Profit: $420.00
                     </div>
-                    <div className="rounded-xl bg-slate-50 p-3 text-xs">
+                    <div className="rounded-xl bg-slate-50 p-3 text-xs dark:bg-slate-900">
                       Max Loss: -$580.00
                     </div>
-                    <div className="rounded-xl bg-slate-50 p-3 text-xs">
+                    <div className="rounded-xl bg-slate-50 p-3 text-xs dark:bg-slate-900">
                       Breakeven: $440.58 / $459.42
                     </div>
-                    <div className="rounded-xl bg-slate-50 p-3 text-xs">
+                    <div className="rounded-xl bg-slate-50 p-3 text-xs dark:bg-slate-900">
                       Probability of Profit: 68.5%
                     </div>
                   </div>
@@ -1138,7 +1141,7 @@ const Platform = ({ onLogout }) => {
             )}
 
             {active === "montecarlo" && (
-              <section className="rounded-2xl border border-slate-200 bg-white p-6 text-xs">
+              <section className="rounded-2xl border border-slate-200 bg-white p-6 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                 <h2 className="text-lg font-semibold">Monte Carlo Options Pricer</h2>
                 <div className="mt-6 grid gap-4 md:grid-cols-2">
                   <input
@@ -1170,10 +1173,10 @@ const Platform = ({ onLogout }) => {
                   Run Simulation
                 </button>
                 <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <div className="rounded-xl bg-slate-50 p-4 text-xs">
+                  <div className="rounded-xl bg-slate-50 p-4 text-xs dark:bg-slate-900">
                     Monte Carlo Price: $3.45
                   </div>
-                  <div className="rounded-xl bg-slate-50 p-4 text-xs">
+                  <div className="rounded-xl bg-slate-50 p-4 text-xs dark:bg-slate-900">
                     Black-Scholes Price: $3.47
                   </div>
                 </div>
@@ -1181,7 +1184,7 @@ const Platform = ({ onLogout }) => {
             )}
 
             {active === "profile" && (
-              <section className="rounded-2xl border border-slate-200 bg-white p-6 text-xs">
+              <section className="rounded-2xl border border-slate-200 bg-white p-6 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
                 <h2 className="text-lg font-semibold">My Profile</h2>
                 <div className="mt-6 grid gap-6 md:grid-cols-[1fr_2fr]">
                   <div className="flex flex-col items-center gap-3">
@@ -1262,7 +1265,7 @@ const Platform = ({ onLogout }) => {
 };
 
 const OptionsTable = ({ title, rows, onBuy, atmStrike }) => (
-  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs">
+  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
     <div className="mb-2 text-xs font-semibold text-slate-500">{title}</div>
     <table className="w-full text-left">
       <thead className="text-[11px] text-slate-400">
@@ -1306,7 +1309,7 @@ const OptionsTable = ({ title, rows, onBuy, atmStrike }) => (
 );
 
 const SummaryCard = ({ label, value }) => (
-  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs">
+  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs shadow-sm dark:border-slate-800 dark:bg-[#111827]">
     <div className="text-slate-500">{label}</div>
     <div className="mt-2 text-base font-semibold">{value}</div>
   </div>
