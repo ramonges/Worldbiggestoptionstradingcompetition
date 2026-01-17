@@ -77,6 +77,17 @@ alter table public.option_positions enable row level security;
 alter table public.options_chain enable row level security;
 alter table public.participant_stats enable row level security;
 
+drop policy if exists "Profiles are self readable" on public.profiles;
+drop policy if exists "Profiles are self updatable" on public.profiles;
+drop policy if exists "Profiles are self updatable 2" on public.profiles;
+drop policy if exists "Accounts are self readable" on public.accounts;
+drop policy if exists "Accounts are self updatable" on public.accounts;
+drop policy if exists "Positions are self readable" on public.option_positions;
+drop policy if exists "Positions are self modifiable" on public.option_positions;
+drop policy if exists "Positions are self update" on public.option_positions;
+drop policy if exists "Options chain readable" on public.options_chain;
+drop policy if exists "Participant stats readable" on public.participant_stats;
+
 create policy "Profiles are self readable"
   on public.profiles for select
   using (auth.uid() = id);
@@ -117,11 +128,39 @@ create policy "Participant stats readable"
   on public.participant_stats for select
   using (true);
 
+insert into public.participant_stats (id, total_participants)
+values (1, 0)
+on conflict (id) do nothing;
+
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id)
-  values (new.id)
+  insert into public.profiles (
+    id,
+    first_name,
+    last_name,
+    university,
+    major,
+    graduation_year,
+    phone,
+    accept_terms,
+    accept_rules,
+    accept_updates,
+    updated_at
+  )
+  values (
+    new.id,
+    new.raw_user_meta_data->>'first_name',
+    new.raw_user_meta_data->>'last_name',
+    new.raw_user_meta_data->>'university',
+    new.raw_user_meta_data->>'major',
+    nullif(new.raw_user_meta_data->>'graduation_year', '')::integer,
+    new.raw_user_meta_data->>'phone',
+    coalesce((new.raw_user_meta_data->>'accept_terms')::boolean, false),
+    coalesce((new.raw_user_meta_data->>'accept_rules')::boolean, false),
+    coalesce((new.raw_user_meta_data->>'accept_updates')::boolean, false),
+    now()
+  )
   on conflict (id) do nothing;
 
   insert into public.accounts (user_id)

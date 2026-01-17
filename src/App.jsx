@@ -390,25 +390,29 @@ const AuthModal = ({ open, mode, onClose, onModeChange, onSuccess }) => {
         if (password !== formData.get("confirm_password")) {
           throw new Error("Passwords do not match.");
         }
-        const { data, error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              first_name: formData.get("first_name"),
+              last_name: formData.get("last_name"),
+              university: formData.get("university"),
+              major: formData.get("major"),
+              graduation_year: formData.get("graduation_year"),
+              phone: formData.get("phone") || "",
+              accept_terms: formData.get("accept_terms") === "on",
+              accept_rules: formData.get("accept_rules") === "on",
+              accept_updates: formData.get("accept_updates") === "on",
+            },
+          },
+        });
         if (error) throw error;
-
-        const profile = {
-          id: data.user.id,
-          first_name: formData.get("first_name"),
-          last_name: formData.get("last_name"),
-          university: formData.get("university"),
-          major: formData.get("major"),
-          graduation_year: Number(formData.get("graduation_year")),
-          phone: formData.get("phone") || null,
-          accept_terms: formData.get("accept_terms") === "on",
-          accept_rules: formData.get("accept_rules") === "on",
-          accept_updates: formData.get("accept_updates") === "on",
-          updated_at: new Date().toISOString(),
-        };
-
-        await supabase.from("profiles").upsert(profile);
-        setMessage("Account created. Check your email to confirm.");
+        if (data.session) {
+          onSuccess();
+        } else {
+          setMessage("Account created. You can now log in.");
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
